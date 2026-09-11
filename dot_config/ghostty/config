@@ -1,0 +1,10 @@
+font-family = Hack Nerd Font Mono JBM Ligatured
+font-feature = calt
+font-feature = liga
+
+theme = Atom One Dark
+
+shell-integration-features = no-cursor
+
+custom-shader = /Users/chrisreeves/.config/ghostty/shaders/cursor_smear_fade.glsl
+custom-shader-animation = true
