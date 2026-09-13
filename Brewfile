@@ -8,6 +8,8 @@ brew "gh"
 brew "git"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Parser generator tool and incremental parsing library (CLI, needed by nvim-treesitter to compile parsers)
+brew "tree-sitter-cli"
 # Terminal-based AI coding assistant
 cask "claude-code"
 # Terminal emulator that uses platform-native UI and GPU acceleration
