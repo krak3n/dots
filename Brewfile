@@ -10,6 +10,8 @@ brew "git"
 brew "tree"
 # Parser generator tool and incremental parsing library (CLI, needed by nvim-treesitter to compile parsers)
 brew "tree-sitter-cli"
+# Fast and simple Node.js version manager
+brew "fnm"
 # Terminal-based AI coding assistant
 cask "claude-code"
 # Terminal emulator that uses platform-native UI and GPU acceleration
