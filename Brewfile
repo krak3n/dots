@@ -12,6 +12,10 @@ brew "tree"
 brew "tree-sitter-cli"
 # Fast and simple Node.js version manager
 brew "fnm"
+# Search tool like grep, but faster (used by telescope.nvim's live_grep)
+brew "ripgrep"
+# Simple, fast alternative to find (used by telescope.nvim's find_files/frecency)
+brew "fd"
 # Terminal-based AI coding assistant
 cask "claude-code"
 # Terminal emulator that uses platform-native UI and GPU acceleration
