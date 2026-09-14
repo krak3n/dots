@@ -24,7 +24,7 @@ vim.o.cursorline = true -- enable cursor line
 vim.o.number = true -- show line numbers
 vim.o.relativenumber = true -- use relative line numbers
 vim.o.winborder = "rounded" -- rounded window borders
-vim.o.signcolumn = "yes" -- always show sign column
+vim.o.statuscolumn = "%!v:lua.require'statuscolumn'.render()" -- custom gutter: fixed diagnostic + git sign columns, so they never shift each other
 vim.o.wrap = false -- disable line wrapping
 vim.o.breakindent = true -- prevent line wrapping
 vim.o.pumheight = 10 -- max size of completion window
@@ -34,15 +34,23 @@ vim.opt.listchars:append("tab:┊ ") -- tab based indent guides
 vim.opt.redrawtime = 10000 -- Give highlighting/parsing more time before it bails out mid-redraw
 vim.o.updatetime = 500
 
+local icons = require("icons")
+
 vim.diagnostic.config({
   virtual_text = false,
   float = { border = "rounded", source = true },
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,
+      [vim.diagnostic.severity.WARN] = icons.diagnostics.Warning,
+      [vim.diagnostic.severity.INFO] = icons.diagnostics.Information,
+      [vim.diagnostic.severity.HINT] = icons.diagnostics.Hint,
+    },
+  },
 })
-vim.api.nvim_create_autocmd("CursorHold", {
-  callback = function()
-    vim.diagnostic.open_float(nil, { focus = false })
-  end,
-})
+vim.keymap.set("n", "<leader>e", function() -- Show diagnostic float for current line
+  vim.diagnostic.open_float(nil, { focus = false })
+end, { desc = "Show Line Diagnostics" })
 vim.o.completeopt = "menu,menuone,noselect,preview" -- omnicomplete options for complete window
 
 vim.o.splitbelow = true                             -- better splitting
@@ -98,6 +106,7 @@ vim.pack.add({
   },
   { src = "https://github.com/stevearc/oil.nvim" },
   { src = "https://github.com/refractalize/oil-git-status.nvim" },
+  { src = "https://github.com/lewis6991/gitsigns.nvim" },
   { src = "https://github.com/nvim-lualine/lualine.nvim" },
   -- Fuzzy Finder
   { src = "https://github.com/nvim-lua/plenary.nvim" },
@@ -113,6 +122,7 @@ vim.pack.add({
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/mason-org/mason.nvim" },
   { src = "https://github.com/mason-org/mason-lspconfig.nvim" },
+  { src = "https://github.com/rachartier/tiny-inline-diagnostic.nvim" },
   -- Completion
   { src = "https://github.com/Saghen/blink.lib" },
   { src = "https://github.com/Saghen/blink.cmp" },
@@ -255,6 +265,75 @@ require("oil").setup({
 })
 
 require("oil-git-status").setup({})
+
+-- Git signs
+require("gitsigns").setup({
+  on_attach = function(bufnr)
+    local gitsigns = require("gitsigns")
+
+    local function map(mode, l, r, opts)
+      opts = opts or {}
+      opts.buffer = bufnr
+      vim.keymap.set(mode, l, r, opts)
+    end
+
+    -- Navigation
+    map("n", "]c", function()
+      if vim.wo.diff then
+        vim.cmd.normal({ "]c", bang = true })
+      else
+        gitsigns.nav_hunk("next")
+      end
+    end)
+
+    map("n", "[c", function()
+      if vim.wo.diff then
+        vim.cmd.normal({ "[c", bang = true })
+      else
+        gitsigns.nav_hunk("prev")
+      end
+    end)
+
+    -- Actions
+    map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "Stage Hunk" })
+    map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "Reset Hunk" })
+
+    map("v", "<leader>hs", function()
+      gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+    end, { desc = "Stage Hunk" })
+
+    map("v", "<leader>hr", function()
+      gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+    end, { desc = "Reset Hunk" })
+
+    map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "Stage Buffer" })
+    map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "Reset Buffer" })
+    map("n", "<leader>hp", gitsigns.preview_hunk, { desc = "Preview Hunk" })
+    map("n", "<leader>hi", gitsigns.preview_hunk_inline, { desc = "Preview Hunk Inline" })
+
+    map("n", "<leader>hb", function()
+      gitsigns.blame_line({ full = true })
+    end, { desc = "Blame Line" })
+
+    map("n", "<leader>hd", gitsigns.diffthis, { desc = "Diff This" })
+
+    map("n", "<leader>hD", function()
+      gitsigns.diffthis("~")
+    end, { desc = "Diff This (against ~)" })
+
+    map("n", "<leader>hQ", function()
+      gitsigns.setqflist("all")
+    end, { desc = "Hunks to Quickfix (all)" })
+    map("n", "<leader>hq", gitsigns.setqflist, { desc = "Hunks to Quickfix" })
+
+    -- Toggles
+    map("n", "<leader>tb", gitsigns.toggle_current_line_blame, { desc = "Toggle Line Blame" })
+    map("n", "<leader>tw", gitsigns.toggle_word_diff, { desc = "Toggle Word Diff" })
+
+    -- Text object
+    map({ "o", "x" }, "ih", gitsigns.select_hunk)
+  end,
+})
 
 -- Statusline
 local hide_in_width = function()
@@ -431,6 +510,16 @@ end, { desc = "Open Oil (float)" }) -- Open Oil (floating window)
 --
 -- LSP
 --
+require("tiny-inline-diagnostic").setup({
+  preset = "modern",
+  options = {
+    show_source = { enabled = true },
+    multilines = { enabled = true },
+    add_messages = { display_count = true },
+    use_icons_from_diagnostic = true,
+  },
+})
+
 require("mason").setup({
   ui = {
     border = "rounded",
