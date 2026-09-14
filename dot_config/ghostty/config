@@ -1,8 +1,13 @@
 font-family = Hack Nerd Font Mono JBM Ligatured
 font-feature = calt
 font-feature = liga
+font-thicken = true
 
-theme = Atom One Dark
+adjust-cell-width = -1
+adjust-cell-height = 0
+
+theme = OneDark
+window-colorspace = display-p3
 
 shell-integration-features = no-cursor
 

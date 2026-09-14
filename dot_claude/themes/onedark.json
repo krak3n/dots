@@ -3,14 +3,14 @@
   "base": "dark",
   "overrides": {
     "claude": "#61afef",
-    "error": "#e06c75",
+    "error": "#e86671",
     "success": "#98c379",
     "warning": "#e5c07b",
     "text": "#abb2bf",
     "secondaryText": "#5c6370",
     "border": "#3b4048",
     "diffAdded": "#98c379",
-    "diffRemoved": "#e06c75",
+    "diffRemoved": "#e86671",
     "syntax.string": "#98c379",
     "syntax.keyword": "#c678dd"
   }
