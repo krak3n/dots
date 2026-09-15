@@ -16,6 +16,8 @@ brew "fnm"
 brew "ripgrep"
 # Simple, fast alternative to find (used by telescope.nvim's find_files/frecency)
 brew "fd"
+# Agent multiplexer that lives in your terminal
+brew "herdr"
 # Terminal-based AI coding assistant
 cask "claude-code"
 # Terminal emulator that uses platform-native UI and GPU acceleration
