@@ -128,6 +128,11 @@ vim.pack.add({
   { src = "https://github.com/antoinemadec/FixCursorHold.nvim" },
   { src = "https://github.com/nvim-neotest/neotest" },
   { src = "https://github.com/fredrikaverpil/neotest-golang" },
+  -- Debugging
+  { src = "https://github.com/mfussenegger/nvim-dap" },
+  { src = "https://github.com/leoluz/nvim-dap-go" },
+  { src = "https://github.com/rcarriga/nvim-dap-ui" },
+  { src = "https://github.com/theHamsta/nvim-dap-virtual-text" },
   -- Completion
   { src = "https://github.com/Saghen/blink.lib" },
   { src = "https://github.com/Saghen/blink.cmp" },
@@ -613,6 +618,48 @@ end, { desc = "Test Output" })
 vim.keymap.set("n", "<leader>ts", function()
   require("neotest").summary.toggle()
 end, { desc = "Test Summary" })
+
+-- Debugging
+require("dap-go").setup({
+  delve = {
+    path = vim.fn.stdpath("data") .. "/mason/bin/dlv",
+  },
+})
+
+local dap, dapui = require("dap"), require("dapui")
+
+dapui.setup({})
+require("nvim-dap-virtual-text").setup({})
+
+dap.listeners.after.event_initialized["dapui_config"] = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated["dapui_config"] = function()
+  dapui.close()
+end
+dap.listeners.before.event_exited["dapui_config"] = function()
+  dapui.close()
+end
+
+vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Continue" })
+vim.keymap.set("n", "<F10>", dap.step_over, { desc = "Debug: Step Over" })
+vim.keymap.set("n", "<F11>", dap.step_into, { desc = "Debug: Step Into" })
+vim.keymap.set("n", "<F12>", dap.step_out, { desc = "Debug: Step Out" })
+vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
+vim.keymap.set("n", "<leader>dB", function()
+  dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+end, { desc = "Debug: Conditional Breakpoint" })
+vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Debug: Toggle UI" })
+vim.keymap.set("n", "<leader>dt", function()
+  -- Uses neotest-golang's subtest resolution (correctly handles table tests
+  -- like `t.Run(tc.name, ...)`), not dap-go's own AST-based lookup, which
+  -- only resolves literal t.Run string names, not loop-variable subtests.
+  -- For debugging ONE specific table-test case: run the file once (<leader>tf)
+  -- to discover its subtests, open the summary (<leader>ts), then press `d`
+  -- on the specific case -- neotest's summary panel debugs the exact
+  -- selected position, not just "nearest to cursor".
+  require("neotest").run.run({ strategy = "dap" })
+end, { desc = "Debug: Nearest Go Test" })
 
 -- Terraform
 vim.lsp.config("terraformls", {
