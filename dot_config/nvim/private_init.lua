@@ -123,6 +123,11 @@ vim.pack.add({
   { src = "https://github.com/mason-org/mason.nvim" },
   { src = "https://github.com/mason-org/mason-lspconfig.nvim" },
   { src = "https://github.com/rachartier/tiny-inline-diagnostic.nvim" },
+  -- Testing
+  { src = "https://github.com/nvim-neotest/nvim-nio" },
+  { src = "https://github.com/antoinemadec/FixCursorHold.nvim" },
+  { src = "https://github.com/nvim-neotest/neotest" },
+  { src = "https://github.com/fredrikaverpil/neotest-golang" },
   -- Completion
   { src = "https://github.com/Saghen/blink.lib" },
   { src = "https://github.com/Saghen/blink.cmp" },
@@ -560,6 +565,7 @@ vim.lsp.config("lua_ls", {
 vim.lsp.config("gopls", {
   settings = {
     gopls = {
+      staticcheck = true,
       analyses = {
         shadow = true,
         nilness = true,
@@ -584,6 +590,29 @@ vim.lsp.config("gopls", {
     },
   },
 })
+
+-- Testing
+require("neotest").setup({
+  adapters = {
+    require("neotest-golang")({}),
+  },
+})
+
+vim.keymap.set("n", "<leader>tt", function()
+  require("neotest").run.run()
+end, { desc = "Test Nearest" })
+
+vim.keymap.set("n", "<leader>tf", function()
+  require("neotest").run.run(vim.fn.expand("%"))
+end, { desc = "Test File" })
+
+vim.keymap.set("n", "<leader>to", function()
+  require("neotest").output.open({ enter = true })
+end, { desc = "Test Output" })
+
+vim.keymap.set("n", "<leader>ts", function()
+  require("neotest").summary.toggle()
+end, { desc = "Test Summary" })
 
 -- Terraform
 vim.lsp.config("terraformls", {
