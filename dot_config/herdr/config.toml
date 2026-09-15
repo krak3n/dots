@@ -1,5 +1,42 @@
 onboarding = false
 
+[terminal]
+default_shell = "/bin/zsh"
+
+[session]
+resume_agents_on_restore = true
+
+[advanced]
+scrollback_limit_bytes = 10000000
+
+[ui]
+mouse_capture = true
+copy_on_select = true
+redraw_on_focus_gained = true
+confirm_close = true
+pane_scrollbars = true
+pane_gaps = true
+pane_borders = "always"
+
+[keys]
+prefix = "ctrl+a"
+reload_config = "prefix+r"
+split_vertical = "prefix+|"     # side-by-side, like tmux's `bind |`
+split_horizontal = "prefix+\""  # stacked, like tmux's `bind '"'`
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+resize_pane_left = "prefix+shift+h"
+resize_pane_down = "prefix+shift+j"
+resize_pane_up = "prefix+shift+k"
+resize_pane_right = "prefix+shift+l"
+next_tab = "prefix+ctrl+l"
+previous_tab = "prefix+ctrl+h"
+copy_mode = "prefix+escape"
+rename_pane = "prefix+t"
+detach = "prefix+d"
+
 [theme]
 name = "one-dark"
 
