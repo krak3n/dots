@@ -107,6 +107,7 @@ vim.pack.add({
   { src = "https://github.com/stevearc/oil.nvim" },
   { src = "https://github.com/refractalize/oil-git-status.nvim" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
+  { src = "https://github.com/ChmaraX/herdr-nvim" },
   { src = "https://github.com/nvim-lualine/lualine.nvim" },
   -- Fuzzy Finder
   { src = "https://github.com/nvim-lua/plenary.nvim" },
@@ -344,6 +345,9 @@ require("gitsigns").setup({
     map({ "o", "x" }, "ih", gitsigns.select_hunk)
   end,
 })
+
+-- Herdr integration (annotate code, send comments to the agent)
+require("herdr-nvim").setup({})
 
 -- Statusline
 local hide_in_width = function()

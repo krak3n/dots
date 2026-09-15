@@ -20,7 +20,7 @@ pane_borders = "always"
 
 [keys]
 prefix = "ctrl+a"
-reload_config = "prefix+r"
+reload_config = "prefix+shift+r"  # moved off prefix+r to make room for Pickr's tabs-space picker below
 split_vertical = "prefix+|"     # side-by-side, like tmux's `bind |`
 split_horizontal = "prefix+\""  # stacked, like tmux's `bind '"'`
 focus_pane_left = "prefix+h"
@@ -36,6 +36,56 @@ previous_tab = "prefix+ctrl+h"
 copy_mode = "prefix+escape"
 rename_pane = "prefix+t"
 detach = "prefix+d"
+
+# javoscript.herdr-pickr bindings
+[[keys.command]]
+key = "prefix+r"
+type = "plugin_action"
+command = "javoscript.herdr-pickr.tabs-space"
+description = "pick tabs in current space"
+
+[[keys.command]]
+key = "prefix+shift+t"
+type = "plugin_action"
+command = "javoscript.herdr-pickr.tabs-all"
+description = "pick tabs in all spaces"
+
+[[keys.command]]
+key = "prefix+s"
+type = "plugin_action"
+command = "javoscript.herdr-pickr.spaces"
+description = "pick spaces"
+
+[[keys.command]]
+key = "prefix+a"
+type = "plugin_action"
+command = "javoscript.herdr-pickr.agents-space"
+description = "pick agents in current space"
+
+[[keys.command]]
+key = "prefix+shift+a"
+type = "plugin_action"
+command = "javoscript.herdr-pickr.agents-all"
+description = "pick agents in all spaces"
+
+[[keys.command]]
+key = "prefix+p"
+type = "plugin_action"
+command = "javoscript.herdr-pickr.panes-tab"
+description = "pick panes in this tab"
+
+# chmarax.herdr-nvim bindings
+[[keys.command]]
+key = "prefix+e"
+type = "plugin_action"
+command = "chmarax.herdr-nvim.toggle"
+description = "nvim sidebar"
+
+[[keys.command]]
+key = "prefix+o"
+type = "plugin_action"
+command = "chmarax.herdr-nvim.pick-file"
+description = "open file from agent output"
 
 [theme]
 name = "one-dark"

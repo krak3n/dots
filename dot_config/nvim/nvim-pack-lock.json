@@ -36,6 +36,10 @@
       "rev": "fd36f038e52ad8409fbf9926ae4a0a514cca04d8",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
+    "herdr-nvim": {
+      "rev": "0450dc7b4c40c986052541c00dba5cdcd1be7ac6",
+      "src": "https://github.com/ChmaraX/herdr-nvim"
+    },
     "lualine.nvim": {
       "rev": "221ce6b2d999187044529f49da6554a92f740a96",
       "src": "https://github.com/nvim-lualine/lualine.nvim"

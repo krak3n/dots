@@ -18,6 +18,12 @@ brew "ripgrep"
 brew "fd"
 # Agent multiplexer that lives in your terminal
 brew "herdr"
+# Lua interpreter (dependency for herdr-pickr plugin)
+brew "lua"
+# libuv bindings for Lua (dependency for herdr-pickr plugin)
+brew "luv"
+# Command-line fuzzy finder (dependency for herdr-pickr plugin)
+brew "fzf"
 # Terminal-based AI coding assistant
 cask "claude-code"
 # Terminal emulator that uses platform-native UI and GPU acceleration
