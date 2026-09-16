@@ -28,3 +28,5 @@ brew "fzf"
 cask "claude-code"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
+# Mesh VPN for remote SSH access (e.g. TermRover mobile -> this Mac)
+cask "tailscale-app"
