@@ -32,3 +32,5 @@ cask "ghostty"
 cask "tailscale-app"
 # Keyboard remapper (fixes UK PC keyboard grave/pipe key swap on macOS)
 cask "karabiner-elements"
+# Terminal UI for git (used standalone via herdr and inside nvim via lazygit.nvim)
+brew "lazygit"

@@ -107,6 +107,7 @@ vim.pack.add({
   { src = "https://github.com/stevearc/oil.nvim" },
   { src = "https://github.com/refractalize/oil-git-status.nvim" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
+  { src = "https://github.com/kdheepak/lazygit.nvim" },
   { src = "https://github.com/ChmaraX/herdr-nvim" },
   { src = "https://github.com/nvim-lualine/lualine.nvim" },
   -- Fuzzy Finder
@@ -530,6 +531,8 @@ vim.keymap.set({ "n" }, "<leader>o", function()
   require("oil").open_float()
 end, { desc = "Open Oil (float)" }) -- Open Oil (floating window)
 
+vim.keymap.set("n", "<leader>lg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
+
 -- Which-key: group labels for leader prefixes (leaf mappings are picked up
 -- automatically from their own `desc`)
 require("which-key").setup({})
@@ -540,6 +543,7 @@ require("which-key").add({
   { "<leader>t", group = "Test / Toggle" },
   { "<leader>a", group = "Herdr Annotate" },
   { "<leader>M", group = "Mason" },
+  { "<leader>l", group = "LazyGit" },
 })
 
 --

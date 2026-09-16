@@ -40,6 +40,15 @@ copy_mode = "prefix+v"  # tmux.conf's `bind Escape copy-mode` doesn't translate
 rename_pane = "prefix+t"
 detach = "prefix+d"
 
+# lazygit popup (overrides herdr's native `goto` default on prefix+g -- exact
+# behavior of `goto` wasn't clear from docs/binary, low-impact tradeoff for the
+# git mnemonic)
+[[keys.command]]
+key = "prefix+g"
+type = "popup"
+command = "lazygit"
+description = "Lazygit"
+
 # javoscript.herdr-pickr bindings
 [[keys.command]]
 key = "prefix+r"
