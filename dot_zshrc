@@ -7,3 +7,5 @@ fi
 
 autoload -Uz compinit
 compinit
+
+eval "$(direnv hook zsh)"

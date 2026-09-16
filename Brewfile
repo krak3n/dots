@@ -34,3 +34,5 @@ cask "tailscale-app"
 cask "karabiner-elements"
 # Terminal UI for git (used standalone via herdr and inside nvim via lazygit.nvim)
 brew "lazygit"
+# Load/unload environment variables based on $PWD
+brew "direnv"

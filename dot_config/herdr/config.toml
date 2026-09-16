@@ -38,6 +38,7 @@ copy_mode = "prefix+v"  # tmux.conf's `bind Escape copy-mode` doesn't translate
                         # (herdr reserves Escape to cancel the prefix sequence),
                         # so using v for "visual" instead
 rename_pane = "prefix+t"
+rename_tab = "prefix+,"  # tmux's default rename-window binding
 detach = "prefix+d"
 
 # lazygit popup (overrides herdr's native `goto` default on prefix+g -- exact
