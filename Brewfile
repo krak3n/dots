@@ -30,3 +30,5 @@ cask "claude-code"
 cask "ghostty"
 # Mesh VPN for remote SSH access (e.g. TermRover mobile -> this Mac)
 cask "tailscale-app"
+# Keyboard remapper (fixes UK PC keyboard grave/pipe key swap on macOS)
+cask "karabiner-elements"
