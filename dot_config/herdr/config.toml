@@ -20,6 +20,7 @@ pane_borders = "always"
 
 [keys]
 prefix = "ctrl+a"
+edit_scrollback = "prefix+shift+e"  # moved off herdr's default (prefix+e), which is now the nvim sidebar toggle below
 reload_config = "prefix+shift+r"  # moved off prefix+r to make room for Pickr's tabs-space picker below
 split_vertical = "prefix+|"     # side-by-side, like tmux's `bind |`
 split_horizontal = "prefix+\""  # stacked, like tmux's `bind '"'`
@@ -33,7 +34,9 @@ resize_pane_up = "prefix+shift+k"
 resize_pane_right = "prefix+shift+l"
 next_tab = "prefix+ctrl+l"
 previous_tab = "prefix+ctrl+h"
-copy_mode = "prefix+escape"
+copy_mode = "prefix+v"  # tmux.conf's `bind Escape copy-mode` doesn't translate
+                        # (herdr reserves Escape to cancel the prefix sequence),
+                        # so using v for "visual" instead
 rename_pane = "prefix+t"
 detach = "prefix+d"
 
