@@ -169,6 +169,10 @@
     "tv.nvim": {
       "rev": "4b156a22c89b50d922a916cc0453762854ac082f",
       "src": "https://github.com/alexpasmantier/tv.nvim"
+    },
+    "which-key.nvim": {
+      "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",
+      "src": "https://github.com/folke/which-key.nvim"
     }
   }
 }

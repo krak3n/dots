@@ -119,6 +119,7 @@ vim.pack.add({
   { src = "https://github.com/mawkler/modicator.nvim" },
   { src = "https://github.com/rachartier/tiny-cmdline.nvim" },
   { src = "https://github.com/m4xshen/smartcolumn.nvim" },
+  { src = "https://github.com/folke/which-key.nvim" },
   -- LSP
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/mason-org/mason.nvim" },
@@ -493,14 +494,22 @@ require("tabout").setup({})
 require("modicator").setup({})
 
 -- Tiny commandline
-require("vim._core.ui2").enable({})
-
 vim.o.cmdheight = 0
 
-require("tiny-cmdline").setup({
-  width = {
-    value = "80%"
-  },
+-- vim._core.ui2.enable() no-ops if called before any UI is attached (e.g. a
+-- headless daemon, like herdr-nvim's sidebar, that only gets a UI attached
+-- after config loads) and never retries. Defer to UIEnter so it works
+-- whether nvim starts as a normal TUI or as a headless daemon attached later.
+vim.api.nvim_create_autocmd("UIEnter", {
+  once = true,
+  callback = function()
+    require("vim._core.ui2").enable({})
+    require("tiny-cmdline").setup({
+      width = {
+        value = "80%"
+      },
+    })
+  end,
 })
 
 -- Smart column
@@ -509,17 +518,29 @@ require("smartcolumn").setup({
 })
 
 -- Key Mappings
-vim.keymap.set({ "n" }, "<leader>so", ":update<CR> :source<CR>") -- Reload init.lua
-vim.keymap.set({ "n" }, "<leader>M", ":Mason<CR>")               -- Open Mason
-vim.keymap.set({ "n" }, "<leader>MU", ":MasonUpdate<CR>")        -- Update all installed LSP servers
-vim.keymap.set({ "n" }, "<TAB>", ":bnext<CR>")                   -- Tab moves to next buffer
-vim.keymap.set({ "n" }, "<S-TAB>", ":bprevious<CR>")             -- Shift+Tab moves to previous buffer
-vim.keymap.set({ "n" }, "<leader>x", ":BufDel<CR>")              -- Close current buffer
-vim.keymap.set({ "n" }, "<leader>X", ":BufDelOthers<CR>")        -- Close all but the current buffer
-vim.keymap.set({ "n" }, "<leader>Q", ":BufDelAll<CR>")           -- Close all buffers (then quits nvim)
+vim.keymap.set({ "n" }, "<leader>so", ":update<CR> :source<CR>", { desc = "Reload Config" })
+vim.keymap.set({ "n" }, "<leader>M", ":Mason<CR>", { desc = "Mason" })
+vim.keymap.set({ "n" }, "<leader>MU", ":MasonUpdate<CR>", { desc = "Mason Update All" })
+vim.keymap.set({ "n" }, "<TAB>", ":bnext<CR>", { desc = "Next Buffer" })
+vim.keymap.set({ "n" }, "<S-TAB>", ":bprevious<CR>", { desc = "Previous Buffer" })
+vim.keymap.set({ "n" }, "<leader>x", ":BufDel<CR>", { desc = "Close Buffer" })
+vim.keymap.set({ "n" }, "<leader>X", ":BufDelOthers<CR>", { desc = "Close Other Buffers" })
+vim.keymap.set({ "n" }, "<leader>Q", ":BufDelAll<CR>", { desc = "Close All Buffers (Quit)" })
 vim.keymap.set({ "n" }, "<leader>o", function()
   require("oil").open_float()
 end, { desc = "Open Oil (float)" }) -- Open Oil (floating window)
+
+-- Which-key: group labels for leader prefixes (leaf mappings are picked up
+-- automatically from their own `desc`)
+require("which-key").setup({})
+require("which-key").add({
+  { "<leader>f", group = "Find" },
+  { "<leader>d", group = "Debug" },
+  { "<leader>h", group = "Git Hunk" },
+  { "<leader>t", group = "Test / Toggle" },
+  { "<leader>a", group = "Herdr Annotate" },
+  { "<leader>M", group = "Mason" },
+})
 
 --
 -- LSP
@@ -551,8 +572,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(ev)
     local opts = { buffer = ev.buf }
 
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Goto Definition" }))
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover" }))
   end,
 })
 
