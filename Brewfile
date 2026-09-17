@@ -42,3 +42,5 @@ brew "kubernetes-cli"
 brew "kind"
 # Container runtime (Docker-compatible) needed for kind to run clusters
 cask "rancher"
+# Kubernetes package manager
+brew "helm"
