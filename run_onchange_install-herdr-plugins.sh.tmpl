@@ -1,0 +1,9 @@
+#!/bin/bash
+set -euo pipefail
+
+# herdr-plugins.txt hash: {{ include "herdr-plugins.txt" | sha256sum }}
+
+while IFS= read -r plugin; do
+  [[ -z "$plugin" || "$plugin" == \#* ]] && continue
+  herdr plugin install "$plugin" -y
+done < {{ joinPath .chezmoi.sourceDir "herdr-plugins.txt" | quote }}

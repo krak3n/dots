@@ -1,0 +1,4 @@
+# Herdr plugins, one OWNER/REPO per line.
+# Installed via: herdr plugin install <OWNER/REPO> -y
+javoscript/herdr-pickr
+ChmaraX/herdr-nvim
