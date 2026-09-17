@@ -44,3 +44,5 @@ brew "kind"
 cask "rancher"
 # Kubernetes package manager
 brew "helm"
+# Postgres client library (force-linked, it's keg-only by default)
+brew "libpq", link: true
