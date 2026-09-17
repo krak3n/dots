@@ -11,3 +11,5 @@ export PATH="$GOPATH/bin:$PATH"
 eval "$(fnm env --use-on-cd --shell zsh)"
 
 export PATH="$HOME/.rd/bin:$PATH"  # Rancher Desktop (docker/kubectl/nerdctl shims)
+
+export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"  # GNU coreutils (ls, date, etc.)
