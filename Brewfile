@@ -46,3 +46,5 @@ cask "rancher"
 brew "helm"
 # Postgres client library (force-linked, it's keg-only by default)
 brew "libpq", link: true
+# GNU core utilities (ls, date, etc.), installed with a "g" prefix alongside macOS's BSD versions
+brew "coreutils"
