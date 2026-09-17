@@ -1,6 +1,8 @@
 source "${ZGEN_DIR:-$HOME/.zgen}/zgen.zsh"
 
 if ! zgen saved; then
+  zgen load superbrothers/zsh-kubectl-prompt
+
   zgen load krak3n/zsh-theme krak3n.zsh-theme
   zgen save
 fi
@@ -9,3 +11,8 @@ autoload -Uz compinit
 compinit
 
 eval "$(direnv hook zsh)"
+source <(fzf --zsh)
+
+command -v kubectl >/dev/null && source <(kubectl completion zsh)
+command -v helm >/dev/null && source <(helm completion zsh)
+command -v docker >/dev/null && source <(docker completion zsh)
