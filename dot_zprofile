@@ -9,3 +9,5 @@ export GOPATH="$HOME/go"
 export PATH="$GOPATH/bin:$PATH"
 
 eval "$(fnm env --use-on-cd --shell zsh)"
+
+export PATH="$HOME/.rd/bin:$PATH"  # Rancher Desktop (docker/kubectl/nerdctl shims)

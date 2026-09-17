@@ -36,3 +36,9 @@ cask "karabiner-elements"
 brew "lazygit"
 # Load/unload environment variables based on $PWD
 brew "direnv"
+# Kubernetes command-line interface
+brew "kubernetes-cli"
+# Run local Kubernetes clusters in Docker
+brew "kind"
+# Container runtime (Docker-compatible) needed for kind to run clusters
+cask "rancher"
