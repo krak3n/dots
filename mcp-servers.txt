@@ -1,0 +1,4 @@
+# User-scope MCP servers, one "name url" per line.
+# Added via: claude mcp add --transport http <name> <url> -s user
+# OAuth still needs to be completed per-machine via /mcp inside a session.
+atlassian https://mcp.atlassian.com/v2/mcp

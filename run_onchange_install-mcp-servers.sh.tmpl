@@ -1,0 +1,10 @@
+#!/bin/bash
+set -euo pipefail
+
+# mcp-servers.txt hash: {{ include "mcp-servers.txt" | sha256sum }}
+
+while IFS= read -r line; do
+  [[ -z "$line" || "$line" == \#* ]] && continue
+  read -r name url <<< "$line"
+  claude mcp get "$name" >/dev/null 2>&1 || claude mcp add --transport http "$name" "$url" -s user
+done < {{ joinPath .chezmoi.sourceDir "mcp-servers.txt" | quote }}
