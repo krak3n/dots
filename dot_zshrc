@@ -1,3 +1,10 @@
+# Force emacs keybindings. zsh defaults to vi mode when $EDITOR contains
+# "vi" (case-insensitive substring match) — "nvim" matches, so without this
+# the shell silently ends up in vi mode (e.g. Ctrl+A does nothing useful and
+# Esc+Backspace doesn't delete a word, since Esc first exits to vi command
+# mode instead of acting as the emacs Meta prefix).
+bindkey -e
+
 source "${ZGEN_DIR:-$HOME/.zgen}/zgen.zsh"
 
 if ! zgen saved; then
