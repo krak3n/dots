@@ -47,7 +47,7 @@ if command -v go >/dev/null 2>&1; then
   done
   if [ -f "$d/go.mod" ]; then
     ver=$(go version | awk '{print $3}' | sed 's/^go//')
-    out="${out}  ${BLUE}${RESET} ${ver}"
+    out="${out}  ${BLUE}${RESET} ${ver}"
   fi
 fi
 

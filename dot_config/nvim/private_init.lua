@@ -189,7 +189,18 @@ vim.api.nvim_set_hl(0, "@method.call", { link = "Function" })
 require("nvim-web-devicons").setup({})
 
 -- Mini Icons
-require("mini.icons").setup({})
+require("mini.icons").setup({
+  filetype = {
+    -- U+E724, keeping the default highlight group (byte-escaped to avoid
+    -- PUA glyphs getting mangled when pasted/typed directly)
+    go = { glyph = "\xee\x9c\xa4" },
+  },
+})
+
+-- Mock nvim-web-devicons with mini.icons so plugins that only know about
+-- nvim-web-devicons (bufferline, lualine, gitsigns) pick up the same icon
+-- overrides above instead of nvim-web-devicons' own separate icon set.
+require("mini.icons").mock_nvim_web_devicons()
 
 -- Buffers
 require("bufdel").setup({
