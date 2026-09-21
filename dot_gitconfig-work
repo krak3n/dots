@@ -1,4 +1,5 @@
 [user]
+	email = christopher.reeves@radiant.co
 	signingkey = 503BA03E7EA4277B
 [commit]
 	gpgsign = true
