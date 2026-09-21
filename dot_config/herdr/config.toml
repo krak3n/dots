@@ -34,6 +34,7 @@ resize_pane_up = "prefix+shift+k"
 resize_pane_right = "prefix+shift+l"
 next_tab = "prefix+ctrl+l"
 previous_tab = "prefix+ctrl+h"
+workspace_picker = "prefix+n"  # moved off herdr's default (prefix+w), which is now the tmux-style navigator below
 copy_mode = "prefix+v"  # tmux.conf's `bind Escape copy-mode` doesn't translate
                         # (herdr reserves Escape to cancel the prefix sequence),
                         # so using v for "visual" instead
@@ -99,6 +100,13 @@ key = "prefix+o"
 type = "plugin_action"
 command = "chmarax.herdr-nvim.pick-file"
 description = "open file from agent output"
+
+# caneppelevitor.herdr-tmux-session-navigator bindings
+[[keys.command]]
+key = "prefix+w"
+type = "plugin_action"
+command = "vitor.tmux-session-navigator.open"
+description = "tmux-style workspace/session navigator"
 
 [theme]
 name = "one-dark"

@@ -2,3 +2,4 @@
 # Installed via: herdr plugin install <OWNER/REPO> -y
 javoscript/herdr-pickr
 ChmaraX/herdr-nvim
+caneppelevitor/herdr-tmux-session-navigator

@@ -1,5 +1,6 @@
 font-family = Hack Nerd Font Mono JBM Ligatured
 font-feature = calt
+macos-option-as-alt = true
 font-feature = liga
 font-thicken = true
 
