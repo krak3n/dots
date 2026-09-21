@@ -18,6 +18,7 @@ pane_scrollbars = true
 pane_gaps = true
 pane_borders = "always"
 
+status_indicators = "dots"
 [keys]
 prefix = "ctrl+a"
 edit_scrollback = "prefix+shift+e"  # moved off herdr's default (prefix+e), which is now the nvim sidebar toggle below
@@ -41,6 +42,7 @@ copy_mode = "prefix+v"  # tmux.conf's `bind Escape copy-mode` doesn't translate
 rename_pane = "prefix+t"
 rename_tab = "prefix+,"  # tmux's default rename-window binding
 detach = "prefix+d"
+zoom = "prefix+shift+m"  # moved off herdr's default (prefix+z), matching tmux's `bind M`
 
 # lazygit popup (overrides herdr's native `goto` default on prefix+g -- exact
 # behavior of `goto` wasn't clear from docs/binary, low-impact tradeoff for the
