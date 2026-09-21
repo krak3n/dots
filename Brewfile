@@ -56,3 +56,5 @@ brew "pinentry-mac"
 brew "git-delta"
 # Fast way to switch between kubectl contexts/namespaces
 brew "kubectx"
+# FluxCD CLI, for GitOps continuous delivery on Kubernetes (not "flux", which is InfluxDB's unrelated query language and conflicts on the same binary name)
+brew "fluxcd"
