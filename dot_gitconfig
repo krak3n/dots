@@ -7,7 +7,6 @@
 [user]
  	name = Chris Reeves
  	email = hey@krak3n.io
-	signingkey = 503BA03E7EA4277B
 [core]
  	editor = nvim
  	filemode = false
@@ -50,7 +49,7 @@
 	rebase = true
 [init]
 	defaultBranch = main
-[commit]
-	gpgsign = true
 [gpg]
 	program = /opt/homebrew/bin/gpg
+[includeIf "gitdir:~/Code/Work/"]
+	path = ~/.gitconfig-work
