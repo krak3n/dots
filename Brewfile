@@ -52,3 +52,5 @@ brew "coreutils"
 brew "gnupg"
 # Native macOS passphrase dialog for gpg-agent
 brew "pinentry-mac"
+# Syntax-highlighting pager for git diffs
+brew "git-delta"

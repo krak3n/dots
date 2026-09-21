@@ -10,6 +10,30 @@
 [core]
  	editor = nvim
  	filemode = false
+  pager = delta
+[interactive]
+  diffFilter = delta --color-only
+[delta]
+	features = onedark
+	line-numbers = true
+	navigate = true
+[delta "onedark"]
+	syntax-theme = TwoDark
+	plus-style = syntax "#3c4740"
+	plus-emph-style = syntax "#436650"
+	minus-style = syntax "#4b363f"
+	minus-emph-style = syntax "#6c3a44"
+	line-numbers-plus-style = "#98c379"
+	line-numbers-minus-style = "#e86671"
+	line-numbers-zero-style = "#5c6370"
+	file-style = "#61afef" bold
+	file-decoration-style = "#61afef" ul
+	hunk-header-style = line-number syntax
+	hunk-header-decoration-style = "#c678dd" box
+	hunk-header-file-style = "#61afef"
+	hunk-header-line-number-style = "#e5c07b"
+	commit-style = "#e5c07b" bold
+	commit-decoration-style = "#e5c07b" box
 [alias]
 	co = checkout
 	cobr = checkout -B

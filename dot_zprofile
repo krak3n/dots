@@ -13,3 +13,5 @@ eval "$(fnm env --use-on-cd --shell zsh)"
 export PATH="$HOME/.rd/bin:$PATH"  # Rancher Desktop (docker/kubectl/nerdctl shims)
 
 export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"  # GNU coreutils (ls, date, etc.)
+
+export CONFIG_DIR="$HOME/.config/lazygit"  # keep lazygit's config under ~/.config like everything else
