@@ -48,3 +48,7 @@ brew "helm"
 brew "libpq", link: true
 # GNU core utilities (ls, date, etc.), installed with a "g" prefix alongside macOS's BSD versions
 brew "coreutils"
+# GnuPG, for signing git commits
+brew "gnupg"
+# Native macOS passphrase dialog for gpg-agent
+brew "pinentry-mac"
