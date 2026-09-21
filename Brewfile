@@ -54,3 +54,5 @@ brew "gnupg"
 brew "pinentry-mac"
 # Syntax-highlighting pager for git diffs
 brew "git-delta"
+# Fast way to switch between kubectl contexts/namespaces
+brew "kubectx"
