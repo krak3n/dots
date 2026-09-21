@@ -25,6 +25,13 @@ zstyle ':completion:*' menu select
 setopt auto_menu
 [[ -n ${terminfo[kcbt]} ]] && bindkey "${terminfo[kcbt]}" reverse-menu-complete
 
+# Ctrl+Left/Right jump by word. No terminfo capname for these (kLFT5/kRIT5
+# aren't in macOS's bundled ncurses), but "\e[1;5D"/"\e[1;5C" is the
+# near-universal xterm-style sequence modern terminals (Ghostty included)
+# send for them.
+bindkey '\e[1;5D' backward-word
+bindkey '\e[1;5C' forward-word
+
 # Directory navigation (replicates oh-my-zsh's lib/directories.zsh, which is
 # plain zsh under the hood — no framework needed)
 setopt auto_cd
