@@ -9,8 +9,13 @@
     "text": "#abb2bf",
     "secondaryText": "#5c6370",
     "border": "#3b4048",
+    "background": "#282c34",
     "diffAdded": "#3c4740",
     "diffRemoved": "#4b363f",
+    "diffAddedDimmed": "#303739",
+    "diffRemovedDimmed": "#353038",
+    "diffAddedWord": "#436650",
+    "diffRemovedWord": "#6c3a44",
     "syntax.string": "#98c379",
     "syntax.keyword": "#c678dd"
   }

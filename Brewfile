@@ -58,3 +58,5 @@ brew "git-delta"
 brew "kubectx"
 # FluxCD CLI, for GitOps continuous delivery on Kubernetes (not "flux", which is InfluxDB's unrelated query language and conflicts on the same binary name)
 brew "fluxcd"
+# Protocol Buffers tool, used by conform.nvim to format .proto files
+brew "buf"
