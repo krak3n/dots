@@ -580,6 +580,11 @@ require("mason-lspconfig").setup({
   ensure_installed = { "gopls", "lua_ls", "terraformls", "tflint", "yamlls" },
 })
 
+-- buf_ls isn't a Mason package (there's nothing to install) -- it's just
+-- `buf lsp serve`, built into the buf CLI itself, so mason-lspconfig's
+-- automatic_enable never covers it and it needs enabling directly.
+vim.lsp.enable("buf_ls")
+
 -- Setup LSP mappings
 local util = require("lspconfig.util")
 
