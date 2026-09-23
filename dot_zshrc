@@ -83,6 +83,11 @@ command -v docker >/dev/null && source <(docker completion zsh)
 alias k=kubectl
 alias kctx=kubectx
 alias kns=kubens
+
+if (( $+commands[pbcopy] )); then
+  alias cc='pbcopy'
+  alias cv='pbpaste'
+fi
 compdef k=kubectl
 
 # Tailscale.app bundles a full CLI, but it must be run via its real path --
