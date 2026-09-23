@@ -60,3 +60,5 @@ brew "kubectx"
 brew "fluxcd"
 # Protocol Buffers tool, used by conform.nvim to format .proto files
 brew "buf"
+# Polyglot runtime version manager
+brew "mise"

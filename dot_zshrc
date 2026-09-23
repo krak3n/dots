@@ -73,6 +73,7 @@ alias ll='ls -lh'
 alias la='ls -lAh'
 
 eval "$(direnv hook zsh)"
+eval "$(mise activate zsh)"
 source <(fzf --zsh)
 
 command -v kubectl >/dev/null && source <(kubectl completion zsh)
