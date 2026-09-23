@@ -80,6 +80,11 @@ command -v kubectl >/dev/null && source <(kubectl completion zsh)
 command -v helm >/dev/null && source <(helm completion zsh)
 command -v docker >/dev/null && source <(docker completion zsh)
 
+alias k=kubectl
+alias kctx=kubectx
+alias kns=kubens
+compdef k=kubectl
+
 # Tailscale.app bundles a full CLI, but it must be run via its real path --
 # a symlink breaks its bundle-identity check ("bundleIdentifier is unknown
 # to the registry"), so a function is used instead of a PATH symlink.
