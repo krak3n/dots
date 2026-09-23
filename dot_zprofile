@@ -15,3 +15,13 @@ export PATH="$HOME/.rd/bin:$PATH"  # Rancher Desktop (docker/kubectl/nerdctl shi
 export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"  # GNU coreutils (ls, date, etc.)
 
 export CONFIG_DIR="$HOME/.config/lazygit"  # keep lazygit's config under ~/.config like everything else
+
+# herdr's inner panes get TERM=xterm-256color instead of Ghostty's own
+# xterm-ghostty terminfo, which is the only one of the two that declares
+# Setulc/Smulx (colored undercurl) -- without it, diagnostic squiggles show
+# as plain undercurl in the default text color instead of red/yellow. Only
+# override when we know we're really in Ghostty and it has that terminfo
+# installed, so this doesn't misfire over SSH to a host that lacks it.
+if [[ "$TERM_PROGRAM" == "ghostty" ]] && infocmp xterm-ghostty >/dev/null 2>&1; then
+  export TERM=xterm-ghostty
+fi
