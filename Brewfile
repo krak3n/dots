@@ -64,3 +64,5 @@ brew "buf"
 brew "mise"
 # Codecov CLI, for uploading coverage reports
 brew "codecov-cli"
+# Database migration manager
+brew "flyway"
