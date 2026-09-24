@@ -62,3 +62,5 @@ brew "fluxcd"
 brew "buf"
 # Polyglot runtime version manager
 brew "mise"
+# Codecov CLI, for uploading coverage reports
+brew "codecov-cli"
