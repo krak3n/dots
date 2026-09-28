@@ -66,3 +66,5 @@ brew "mise"
 brew "codecov-cli"
 # Database migration manager
 brew "flyway"
+# Open source API client (Postman alternative)
+cask "bruno"

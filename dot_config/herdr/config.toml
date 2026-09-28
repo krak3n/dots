@@ -35,6 +35,8 @@ resize_pane_up = "prefix+shift+k"
 resize_pane_right = "prefix+shift+l"
 next_tab = "prefix+ctrl+l"
 previous_tab = "prefix+ctrl+h"
+move_tab_previous = "prefix+alt+shift+left"  # reorder tabs; unbound by default
+move_tab_next = "prefix+alt+shift+right"
 workspace_picker = "prefix+n"  # moved off herdr's default (prefix+w), which is now the tmux-style navigator below
 copy_mode = "prefix+v"  # tmux.conf's `bind Escape copy-mode` doesn't translate
                         # (herdr reserves Escape to cancel the prefix sequence),
