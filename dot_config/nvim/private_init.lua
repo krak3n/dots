@@ -27,6 +27,9 @@ vim.o.winborder = "rounded" -- rounded window borders
 vim.o.statuscolumn = "%!v:lua.require'statuscolumn'.render()" -- custom gutter: fixed diagnostic + git sign columns, so they never shift each other
 vim.o.wrap = false -- disable line wrapping
 vim.o.breakindent = true -- prevent line wrapping
+
+vim.o.spell = true -- spellcheck comments/strings (scoped via treesitter's @spell captures, code identifiers are skipped)
+vim.o.spelllang = "en_gb"
 vim.o.pumheight = 10 -- max size of completion window
 vim.opt.list = true -- show certain normally-invisible characters in the buffer.
 vim.opt.listchars:append("leadmultispace:┊ ") -- space based indent guides
@@ -531,6 +534,9 @@ require("smartcolumn").setup({
 
 -- Key Mappings
 vim.keymap.set({ "n" }, "<leader>so", ":update<CR> :source<CR>", { desc = "Reload Config" })
+vim.keymap.set("n", "<leader>sp", function()
+  vim.o.spell = not vim.o.spell
+end, { desc = "Toggle Spellcheck" })
 vim.keymap.set({ "n" }, "<leader>M", ":Mason<CR>", { desc = "Mason" })
 vim.keymap.set({ "n" }, "<leader>MU", ":MasonUpdate<CR>", { desc = "Mason Update All" })
 vim.keymap.set({ "n" }, "<TAB>", ":bnext<CR>", { desc = "Next Buffer" })
