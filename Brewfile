@@ -70,3 +70,5 @@ brew "flyway"
 cask "bruno"
 # JSON processor, used by the Claude Code status line script
 brew "jq"
+# Google Cloud CLI
+cask "gcloud-cli"
