@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+# Merges tracked settings into the live settings.json rather than replacing
+# it outright, so untracked keys the file may already have -- e.g. Claude
+# Code's own auto-generated `autoMode.environment` profile for a work repo --
+# survive `chezmoi apply` instead of being clobbered.
+import json
+import sys
+
+try:
+    data = json.load(sys.stdin)
+except (json.JSONDecodeError, ValueError):
+    data = {}
+
+data["hooks"] = {
+    "SessionStart": [
+        {
+            "matcher": "*",
+            "hooks": [
+                {
+                    "type": "command",
+                    "command": "bash '/Users/chrisreeves/.claude/hooks/herdr-agent-state.sh' session",
+                    "timeout": 10,
+                }
+            ],
+        }
+    ]
+}
+data["theme"] = "custom:onedark"
+data["statusLine"] = {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh",
+}
+
+json.dump(data, sys.stdout, indent=2, ensure_ascii=False)
+sys.stdout.write("\n")
