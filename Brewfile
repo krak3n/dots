@@ -72,3 +72,5 @@ cask "bruno"
 brew "jq"
 # Google Cloud CLI
 cask "gcloud-cli"
+# Render markdown on the CLI
+brew "glow"
