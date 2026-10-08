@@ -74,3 +74,5 @@ brew "jq"
 cask "gcloud-cli"
 # Render markdown on the CLI
 brew "glow"
+# PDF rendering library (pdftotext, pdftoppm, etc.)
+brew "poppler"
