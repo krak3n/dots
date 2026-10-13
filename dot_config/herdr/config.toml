@@ -54,6 +54,8 @@ key = "prefix+g"
 type = "popup"
 command = "lazygit"
 description = "Lazygit"
+width = "95%"
+height = "95%"
 
 # javoscript.herdr-pickr bindings
 [[keys.command]]

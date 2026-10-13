@@ -7,6 +7,9 @@
 [user]
  	name = Chris Reeves
  	email = hey@krak3n.io
+	signingkey = 503BA03E7EA4277B
+[commit]
+	gpgsign = true
 [core]
  	editor = nvim
  	filemode = false
