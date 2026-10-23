@@ -4,12 +4,15 @@
 # Code's own auto-generated `autoMode.environment` profile for a work repo --
 # survive `chezmoi apply` instead of being clobbered.
 import json
+import os
 import sys
 
 try:
     data = json.load(sys.stdin)
 except (json.JSONDecodeError, ValueError):
     data = {}
+
+home = os.path.expanduser("~")
 
 data["hooks"] = {
     "SessionStart": [
@@ -18,7 +21,7 @@ data["hooks"] = {
             "hooks": [
                 {
                     "type": "command",
-                    "command": "bash '/Users/chrisreeves/.claude/hooks/herdr-agent-state.sh' session",
+                    "command": f"bash '{home}/.claude/hooks/herdr-agent-state.sh' session",
                     "timeout": 10,
                 }
             ],
