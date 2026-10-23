@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # mcp-servers.txt hash: {{ include "mcp-servers.txt" | sha256sum }}
 
 while IFS= read -r line; do

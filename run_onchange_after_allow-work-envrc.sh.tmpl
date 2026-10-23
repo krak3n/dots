@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # .envrc hash: {{ include "Code/Work/dot_envrc" | sha256sum }}
 
 direnv allow "{{ .chezmoi.homeDir }}/Code/Work/.envrc"

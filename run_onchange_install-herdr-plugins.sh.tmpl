@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # herdr-plugins.txt hash: {{ include "herdr-plugins.txt" | sha256sum }}
 
 while IFS= read -r plugin; do
