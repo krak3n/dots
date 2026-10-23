@@ -1,0 +1,1 @@
+export DOCKER_HOST=~/.rd/docker.sock

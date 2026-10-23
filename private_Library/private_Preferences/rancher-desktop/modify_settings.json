@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+# Merges only the settings we've deliberately chosen into the live
+# settings.json rather than replacing it outright, so machine-specific
+# settings Rancher Desktop generates itself (VM memory/CPU sizing, disk
+# size, etc.) survive `chezmoi apply` instead of being clobbered or
+# seeded with values sized for a different Mac.
+import json
+import sys
+
+try:
+    data = json.load(sys.stdin)
+except (json.JSONDecodeError, ValueError):
+    data = {}
+
+data.setdefault("application", {})["pathManagementStrategy"] = "manual"
+
+# Mutes Rancher's own "~/.rd/bin has not been added to PATH... in your
+# bash shell" diagnostic -- bash is never configured, only zsh (via
+# .zprofile), so this warning doesn't apply.
+diagnostics = data.setdefault("diagnostics", {})
+diagnostics.setdefault("mutedChecks", {})["RD_BIN_IN_BASH_PATH"] = True
+
+json.dump(data, sys.stdout, indent=2, ensure_ascii=False)
+sys.stdout.write("\n")
