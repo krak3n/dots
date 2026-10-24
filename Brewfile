@@ -78,3 +78,5 @@ brew "glow"
 brew "poppler"
 # Web browser with vertical tabs/workspaces (Arc replacement)
 cask "vivaldi"
+# Firefox-based web browser with vertical tabs and workspaces
+cask "zen"
