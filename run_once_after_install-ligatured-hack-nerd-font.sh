@@ -15,6 +15,9 @@ set -euo pipefail
 # Rancher is up picks this back up.
 
 export PATH="$HOME/.rd/bin:$PATH"
+# Rancher runs with admin-access=false, so there's no /var/run/docker.sock;
+# point at its socket directly, as ~/.envrc does (not loaded under chezmoi).
+export DOCKER_HOST="unix://$HOME/.rd/docker.sock"
 
 if ! command -v docker >/dev/null 2>&1; then
   echo "docker not found (Rancher Desktop not installed yet?) — skipping font build, will retry on next chezmoi apply" >&2
