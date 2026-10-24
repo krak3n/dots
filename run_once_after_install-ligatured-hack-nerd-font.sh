@@ -7,11 +7,12 @@ set -euo pipefail
 # release is current at build time, so running it here (once, on a fresh
 # machine) gets an up-to-date patched font rather than an old pinned one.
 #
-# Requires Docker (Rancher Desktop). Rancher's first-run setup needs a GUI
-# + sudo prompt, so it can't be driven headlessly by this script. If Docker
-# isn't ready yet, this exits non-zero — chezmoi retries run_once_ scripts
-# that failed on every subsequent `chezmoi apply`, so just finish Rancher's
-# setup and re-run `chezmoi apply` to pick this back up.
+# Requires Docker (Rancher Desktop), which
+# run_once_after_configure-rancher-desktop.sh starts headlessly just before
+# this (chezmoi runs scripts in name order). If Docker still isn't ready,
+# this exits non-zero — chezmoi retries run_once_ scripts that failed on
+# every subsequent `chezmoi apply`, so re-running `chezmoi apply` once
+# Rancher is up picks this back up.
 
 export PATH="$HOME/.rd/bin:$PATH"
 
@@ -21,7 +22,7 @@ if ! command -v docker >/dev/null 2>&1; then
 fi
 
 if ! docker info >/dev/null 2>&1; then
-  echo "docker daemon not reachable (finish Rancher Desktop's first-run setup) — skipping font build, will retry on next chezmoi apply" >&2
+  echo "docker daemon not reachable (Rancher Desktop not running yet?) — skipping font build, will retry on next chezmoi apply" >&2
   exit 1
 fi
 
