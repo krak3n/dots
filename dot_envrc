@@ -1,1 +1,1 @@
-export DOCKER_HOST=~/.rd/docker.sock
+export DOCKER_HOST="unix://$HOME/.rd/docker.sock"
