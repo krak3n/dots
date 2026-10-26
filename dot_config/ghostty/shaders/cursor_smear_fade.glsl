@@ -160,22 +160,21 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
     // Compute fade factor based on distance from current cursor
     float distFromCursor = distance(normCoord, currentCenter);
-    float fadeFactor = 1.0 - smoothstep(0.0, lineLength, distFromCursor);
-
-    // Apply fading effect to trail color
-    vec4 fadedTrailColor = TRAIL_COLOR * fadeFactor;
+    float fadeFactor = 1.0 - smoothstep(0.0, max(lineLength, 1e-4), distFromCursor);
 
     // Enhance color saturation for more vibrant trail effect
-    float gray = dot(fadedTrailColor.rgb, vec3(0.299, 0.587, 0.114));
+    float gray = dot(TRAIL_COLOR.rgb, vec3(0.299, 0.587, 0.114));
     const float saturationBoost = 1.8;
     vec4 enhancedColor = clamp(
-        mix(vec4(vec3(gray), fadedTrailColor.a), fadedTrailColor, saturationBoost),
+        mix(vec4(vec3(gray), 1.0), TRAIL_COLOR, saturationBoost),
         0.0, 1.0
     );
 
-    // Blend trail color with background
+    // Blend trail color with background. fadeFactor scales the blend
+    // weight (not the color) so the tail fades into the real background
+    // instead of dimming to black.
     vec4 originalColor = fragColor;
-    fragColor.rgb = mix(fragColor.rgb, enhancedColor.rgb, alpha);
+    fragColor.rgb = mix(fragColor.rgb, enhancedColor.rgb, alpha * fadeFactor);
 
     // Remove trail where it overlaps with current cursor
     fragColor.rgb = mix(fragColor.rgb, originalColor.rgb, step(sdfCurrentCursor, 0.0));

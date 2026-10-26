@@ -1,4 +1,1 @@
 source_up
-
-export CLAUDE_CONFIG_DIR="$HOME/.claude-work"
-export CLAUDE_SECURESTORAGE_CONFIG_DIR="$HOME/.claude-work"
