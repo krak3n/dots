@@ -4,6 +4,11 @@ eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="nvim"
 
+# bob (the Neovim version manager) only installs a proxy `nvim` binary into
+# its nvim-bin dir; it never touches PATH itself. On macOS that dir lives under
+# ~/Library/Application Support, not ~/.local/share like on Linux.
+export PATH="$HOME/Library/Application Support/bob/nvim-bin:$PATH"
+
 export GOROOT="$HOME/.go"
 export GOPATH="$HOME/go"
 export PATH="$GOPATH/bin:$PATH"
