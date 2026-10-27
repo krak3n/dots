@@ -31,7 +31,6 @@ Package/plugin lists live in plain files at the repo root, excluded from deploym
 - `Brewfile` → `brew bundle` (each entry has a one-line comment describing it; keep that style)
 - `herdr-plugins.txt` → `herdr plugin install`
 - `mcp-servers.txt` → `claude mcp add ... -s user` (`name url` per line)
-- `Code/Work/dot_envrc` → `direnv allow`
 
 To add a new tool, add it to the appropriate list rather than writing a new install script. Any new top-level non-dotfile must be added to `.chezmoiignore`.
 
