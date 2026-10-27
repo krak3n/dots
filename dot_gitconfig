@@ -78,5 +78,5 @@
 	defaultBranch = main
 [gpg]
 	program = /opt/homebrew/bin/gpg
-[includeIf "gitdir:~/Code/Work/"]
+[includeIf "gitdir:~/Code/github.com/ori-edge/"]
 	path = ~/.gitconfig-work
