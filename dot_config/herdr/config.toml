@@ -12,7 +12,7 @@ scrollback_limit_bytes = 10000000
 [ui]
 mouse_capture = true
 copy_on_select = true
-redraw_on_focus_gained = false  # suspected cause of constant redraw flicker over SSH: repeated focus events each force a full repaint
+redraw_on_focus_gained = true
 confirm_close = true
 pane_scrollbars = true
 pane_gaps = true
