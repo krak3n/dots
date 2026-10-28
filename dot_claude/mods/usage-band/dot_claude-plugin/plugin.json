@@ -1,0 +1,6 @@
+{
+  "name": "usage-band",
+  "version": "0.1.0",
+  "description": "A band above the prompt showing usage limits, context window fill and the workspace (kube context, directory, git state)",
+  "types": "./types/index.d.ts"
+}

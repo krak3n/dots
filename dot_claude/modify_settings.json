@@ -29,10 +29,20 @@ data["hooks"] = {
     ]
 }
 data["theme"] = "custom:onedark"
-data["statusLine"] = {
-    "type": "command",
-    "command": "bash ~/.claude/statusline-command.sh",
-}
+# The status line's kube context, directory and git state now live in the
+# usage-band mod's Workspace card, so drop the old entry from machines that
+# still have it (see .chezmoiremove for the script it ran).
+data.pop("statusLine", None)
+
+# Load the usage-band mod (dot_claude/mods/usage-band). Claude Code reads this
+# from the `env` block of ~/.claude/settings.json; other env keys and any other
+# plugin dirs already listed survive, so only our entry is added.
+env = data.setdefault("env", {})
+mod_dir = f"{home}/.claude/mods/usage-band"
+plugin_dirs = [d for d in env.get("CLAUDE_CODE_PLUGIN_DIRS", "").split(os.pathsep) if d]
+if mod_dir not in plugin_dirs:
+    plugin_dirs.append(mod_dir)
+env["CLAUDE_CODE_PLUGIN_DIRS"] = os.pathsep.join(plugin_dirs)
 
 json.dump(data, sys.stdout, indent=2, ensure_ascii=False)
 sys.stdout.write("\n")

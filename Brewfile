@@ -68,7 +68,7 @@ brew "codecov-cli"
 brew "flyway"
 # Open source API client (Postman alternative)
 cask "bruno"
-# JSON processor, used by the Claude Code status line script
+# JSON processor
 brew "jq"
 # Google Cloud CLI
 cask "gcloud-cli"
