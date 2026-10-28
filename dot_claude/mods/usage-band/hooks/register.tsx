@@ -39,7 +39,8 @@ const CYAN = '#56b6c2'
 // Material Design icons, as the kube chip's: an hourglass, a week of days, a
 // gauge for anything else, and a memory chip for the context window.
 const GAUGE = '\u{f029a}'
-const GO = '\u{f07d3}'
+// Seti's Go gopher (nf-seti-go), the one icon here that is not Material.
+const GO = '\ue627'
 
 // The verdict's icon for each state it can be in: a limit reached (a lock), a
 // pace that will run out before the reset (a cross), a close one (an alert)
@@ -519,6 +520,7 @@ export const register: Register = on => {
           <Box paddingX={1} columnGap={1} flexWrap="wrap" marginTop={1}>
             {where.kube && chip('kube', BLUE, `\u{f0833} ${where.kube}`)}
             {chip('dir', YELLOW, `\u{f024b} ${home(where.cwd)}`)}
+            {where.go && chip('go', CYAN, `${GO} ${where.go}`)}
             {where.git && (
               <Box columnGap={1}>
                 {chip('git', gitTone(where.git), `\u{f062c} ${where.git.branch}`)}
@@ -529,7 +531,6 @@ export const register: Register = on => {
                 ))}
               </Box>
             )}
-            {where.go && chip('go', CYAN, `${GO} ${where.go}`)}
           </Box>
         )}
       </Box>
