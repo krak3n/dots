@@ -1,9 +1,15 @@
 export type Tick = number
 
 // Where the session is working, as the shell prompt used to show it: the
-// kubectl context (null without one), the directory, and the repo's state
-// (null outside one).
-export type Workspace = { kube: string | null; cwd: string; git: GitState | null }
+// kubectl context (null without one), the directory, the repo's state (null
+// outside one) and the Go version in use (null outside a Go module or
+// workspace).
+export type Workspace = {
+  kube: string | null
+  cwd: string
+  git: GitState | null
+  go: string | null
+}
 
 export type GitState = {
   branch: string

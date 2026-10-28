@@ -34,10 +34,12 @@ const BLUE = '#61afef'
 const YELLOW = '#e5c07b'
 const GREEN = '#98c379'
 const RED = '#e06c75'
+const CYAN = '#56b6c2'
 
 // Material Design icons, as the kube chip's: an hourglass, a week of days, a
 // gauge for anything else, and a memory chip for the context window.
 const GAUGE = '\u{f029a}'
+const GO = '\u{f07d3}'
 
 // The verdict's icon for each state it can be in: a limit reached (a lock), a
 // pace that will run out before the reset (a cross), a close one (an alert)
@@ -208,6 +210,22 @@ const limitBar = (percent: number, fill: string, width: number, marker?: number)
   ]
 }
 
+// The Go version `go` runs in `cwd`, or null outside a module or workspace.
+// `go env` prints GOMOD and GOWORK one to a line, each empty or /dev/null when
+// unset, so a directory counts as Go when either names a file. `go version`
+// runs in the directory too, so a go.mod's toolchain line is what it reports.
+const goVersion = async ($: EngineInterface, cwd: string): Promise<string | null> => {
+  const env = await run($, ['go', 'env', 'GOMOD', 'GOWORK'], cwd)
+
+  if (!env || env.split('\n').every(line => line.trim() === '' || line.trim() === '/dev/null')) {
+    return null
+  }
+
+  const out = await run($, ['go', 'version'], cwd)
+
+  return out?.match(/\bgo(\d+(?:\.\d+)*\S*)/)?.[1] ?? null
+}
+
 let isRefreshing = false
 
 // Looks at kubectl and git again. Never throws and never waits on a hook:
@@ -229,6 +247,7 @@ async function refresh($: EngineInterface) {
       kube: kube?.trim() || null,
       cwd,
       git: status === null ? null : parseGit(status),
+      go: await goVersion($, cwd),
     }
 
     if (JSON.stringify(await read($, workspace)) !== JSON.stringify(found)) {
@@ -510,6 +529,7 @@ export const register: Register = on => {
                 ))}
               </Box>
             )}
+            {where.go && chip('go', CYAN, `${GO} ${where.go}`)}
           </Box>
         )}
       </Box>
