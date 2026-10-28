@@ -39,8 +39,8 @@ const CYAN = '#56b6c2'
 // Material Design icons, as the kube chip's: an hourglass, a week of days, a
 // gauge for anything else, and a memory chip for the context window.
 const GAUGE = '\u{f029a}'
-// Seti's Go gopher (nf-seti-go), the one icon here that is not Material.
-const GO = '\ue627'
+// Devicons' Go (nf-dev-go), the one icon here that is not Material.
+const GO = '\ue724'
 
 // The verdict's icon for each state it can be in: a limit reached (a lock), a
 // pace that will run out before the reset (a cross), a close one (an alert)
