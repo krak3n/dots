@@ -3,3 +3,5 @@ herdr-plugins.txt
 mcp-servers.txt
 .DS_Store
 "**/.DS_Store"
+rex-settings.json
+rex-custom-themes.json

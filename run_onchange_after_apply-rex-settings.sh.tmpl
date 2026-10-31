@@ -1,0 +1,36 @@
+#!/bin/bash
+set -euo pipefail
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# rex-settings.json hash: {{ include "rex-settings.json" | sha256sum }}
+# rex-custom-themes.json hash: {{ include "rex-custom-themes.json" | sha256sum }}
+
+# Rex for Mac keeps its app settings in macOS user defaults, not in a file we
+# can template, so they are written with `defaults`. Only deliberate choices
+# live in rex-settings.json; machine state (window frames, Sparkle update
+# checks, sync records, last focused session, activity history, the cached
+# server route) is left alone so each Mac keeps its own.
+#
+# Rex reads these when it starts, so quit and reopen it after this runs.
+domain=com.superlogical.rex
+settings={{ joinPath .chezmoi.sourceDir "rex-settings.json" | quote }}
+themes={{ joinPath .chezmoi.sourceDir "rex-custom-themes.json" | quote }}
+
+# Only booleans and strings are used, so there is no number/array handling.
+while IFS=$'\t' read -r key type value; do
+  case "$type" in
+    boolean) defaults write "$domain" "$key" -bool "$value" ;;
+    string) defaults write "$domain" "$key" -string "$value" ;;
+    *)
+      echo "rex-settings.json: unsupported type '$type' for $key" >&2
+      exit 1
+      ;;
+  esac
+done < <(jq -r 'to_entries[] | "\(.key)\t\(.value | type)\t\(.value)"' "$settings")
+
+# The imported Ghostty theme. Rex stores custom themes as one JSON blob held as
+# plist data, which is why the theme IDs in rex-settings.json (the
+# Workspace.darkThemeID custom-... entry) resolve on a fresh Mac without
+# importing the theme by hand.
+defaults write "$domain" Workspace.customThemes -data "$(jq -c . "$themes" | xxd -p | tr -d '\n')"

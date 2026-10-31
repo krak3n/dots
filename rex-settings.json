@@ -1,0 +1,19 @@
+{
+  "Workspace.darkThemeID": "custom-FFFEC15B-AA04-464B-BC8E-AC2981EAE080",
+  "Workspace.lightThemeID": "merino-light",
+  "Workspace.interfaceStyle": "useTheme",
+  "Workspace.tabStyle": "vertical",
+  "Workspace.sidebarPosition": "left",
+  "Workspace.tabIconTintMode": "off",
+  "Workspace.inactivePaneFadeMode": "both",
+  "Workspace.animationStyle": "disabled",
+  "Workspace.usesStandardInactiveWindowPaneStyles": true,
+  "Workspace.terminalFontName": "Hack Nerd Font Mono JBM Ligatured",
+  "Workspace.terminalFontSmoothing": true,
+  "Workspace.terminalImproveTextContrast": false,
+  "Workspace.terminalUseThemePalette": false,
+  "Workspace.terminalUsesDisplayP3": false,
+  "rex.agents.names-sessions": false,
+  "rex.server.automatic-restart-enabled": true,
+  "rex.server.block-plugin-reload-enabled": false
+}
