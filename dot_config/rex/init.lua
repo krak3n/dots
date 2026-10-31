@@ -46,11 +46,10 @@ rex.bind(prefix .. ">alt+shift+right", "client.tab.move.forward")
 rex.bind(prefix .. ">,", "client.tab.rename")  -- tmux's rename-window binding
 
 -- herdr workspaces are Rex sessions. herdr spreads the picker over n (its
--- workspace picker), s (Pickr spaces) and w (tmux-style navigator); Rex has
--- one session switcher, so all three open it.
+-- workspace picker), s (Pickr spaces) and w (tmux-style navigator). Rex's own
+-- switcher covers n and s; w opens the tree picker defined further down.
 rex.bind(prefix .. ">n", "session.switch")
 rex.bind(prefix .. ">s", "session.switch")
-rex.bind(prefix .. ">w", "session.switch")
 
 -- Reload this file (herdr's prefix+shift+r)
 rex.bind(prefix .. ">shift+r", "client.config.reload")
@@ -97,3 +96,40 @@ rex.action{
   end,
 }
 rex.bind(prefix .. ">g", "lazygit")
+
+-- tmux choose-tree style picker (herdr's tmux-session-navigator on prefix+w):
+-- a floating layer listing sessions > tabs > panes with a preview of the
+-- selected pane. The script is dot_config/rex/executable_session-tree.
+--
+-- The action returns straight away rather than waiting for the picker (actions
+-- are cut off after 30 seconds); the layer closes itself when the picker exits.
+-- ctx.client_id is passed through so the jump switches the window that pressed
+-- the key. Jumping calls the client action session.select over the CLI, which
+-- Rex only allows with Remote Control on (Settings > Rex Server).
+--
+-- Known Rex bug: opening a focused floating layer clears pane zoom, and closing
+-- it doesn't restore it.
+rex.action{
+  name  = "session_tree",
+  title = "Session Tree",
+  run   = function(ctx, args)
+    local _, err = rex.session.new_layer{
+      bounds = { 0.05, 0.05, 0.9, 0.9 },
+      focus = true,
+      layout = rex.layout.block{
+        flavor = "com.superlogical.terminal.shell",
+        options = {
+          -- Login zsh so fzf and python3 are on PATH; "$@" is the client id
+          -- (the first word after the script is $0).
+          command = {
+            "/bin/zsh", "-lc", 'exec "$HOME/.config/rex/session-tree" "$@"',
+            "session-tree", ctx.client_id or "",
+          },
+          shell = "none",
+        },
+      },
+    }
+    if err ~= nil then error(err, 0) end
+  end,
+}
+rex.bind(prefix .. ">w", "session_tree")

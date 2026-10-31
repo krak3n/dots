@@ -1,0 +1,320 @@
+#!/usr/bin/env python3
+"""tmux choose-tree style picker for Rex: sessions > tabs > panes in fzf.
+
+Opened in a floating layer by the `session_tree` action in init.lua (ctrl+a w).
+Each row shows what is running, its directory and, for programs that report
+one (Claude Code, Codex, ...), a status dot. The right-hand preview is the
+selected pane's screen. Enter jumps to the row; Esc closes.
+
+  session-tree [CLIENT_ID]            run the picker (CLIENT_ID = the client that
+                                      opened it, so the jump targets that window)
+  session-tree --list                 print the rows fzf would show (for testing)
+  session-tree --preview ROW_ID       print the preview for one row (used by fzf)
+  session-tree --jump ROW_ID [CLIENT] jump to a row (used by fzf)
+
+Jumping uses `session.select`, a client action, which Rex only accepts from the
+CLI when Remote Control is on (Settings > Rex Server).
+"""
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+
+HOME = os.path.expanduser("~")
+
+# Gathers the whole tree in one server round trip (about 30ms); one `rex`
+# call per pane would be far slower. It runs inside the server, so it sees every
+# session, and the rows are built from its JSON in Python below.
+GATHER_LUA = r"""
+local T = "com.superlogical.terminal"
+local out = {}
+local sl = rex.call("session.list") or {}
+for _, s in ipairs(sl.sessions or {}) do
+  local v = rex.session.view{ session_id = s.session_id }
+  local sess = { id = s.session_id, label = s.label, active = v and v.active_window_id, windows = {} }
+  for _, w in ipairs((v and v.windows) or {}) do
+    local win = { id = w.window_id, label = w.label, focused = w.focused_block_id, blocks = {} }
+    for _, l in ipairs(w.layers or {}) do
+      for _, b in ipairs(l.blocks or {}) do
+        local item = { id = b.block_id, label = b.label }
+        if b.creator_name == T then
+          local t = rex.block.call(T, "title", { block_id = b.block_id })
+          item.title = t and t.title
+          local p = rex.block.call(T, "process", { block_id = b.block_id })
+          item.proc = p and p.foreground and p.foreground.name
+          item.cwd = p and p.foreground and p.foreground.cwd
+          local ps = rex.block.call(T, "program_status", { block_id = b.block_id })
+          item.status = ps and ps.records
+        end
+        win.blocks[#win.blocks + 1] = item
+      end
+    end
+    sess.windows[#sess.windows + 1] = win
+  end
+  out[#out + 1] = sess
+end
+return out
+"""
+
+DIM, BOLD, RESET = "\x1b[2m", "\x1b[1m", "\x1b[0m"
+GREEN, YELLOW, RED, BLUE = "\x1b[32m", "\x1b[33m", "\x1b[31m", "\x1b[34m"
+
+# Program Status Protocol states, most to least attention-worthy.
+STATE_RANK = ["blocked", "error", "done", "working", "idle"]
+STATE_DOT = {
+    "blocked": RED + "●" + RESET,
+    "error": RED + "✗" + RESET,
+    "done": GREEN + "●" + RESET,
+    "working": YELLOW + "●" + RESET,
+    "idle": DIM + "○" + RESET,
+}
+
+
+def rex_bin():
+    return shutil.which("rex") or os.path.join(os.environ.get("REX_BIN_DIR", ""), "rex")
+
+
+def rex(*args, check=True):
+    return subprocess.run([rex_bin(), *args], capture_output=True, text=True, check=check)
+
+
+def gather():
+    r = rex("do", "-e", GATHER_LUA)
+    return json.loads(r.stdout or "[]")
+
+
+def short_path(path):
+    if not path:
+        return ""
+    return "~" + path[len(HOME):] if path == HOME or path.startswith(HOME + "/") else path
+
+
+def block_state(block):
+    states = {r.get("state") for r in (block.get("status") or []) if isinstance(r, dict)}
+    for s in STATE_RANK:
+        if s in states:
+            return s
+    return None
+
+
+def block_text(block):
+    name = block.get("proc") or block.get("label") or "block"
+    title = block.get("title") or ""
+    state = block_state(block)
+    dot = STATE_DOT[state] + " " if state else ""
+    # Skip the title when it only repeats the process name.
+    extra = f" {DIM}{title}{RESET}" if title and title != name else ""
+    cwd = block.get("cwd")
+    where = f" {DIM}{short_path(cwd)}{RESET}" if cwd else ""
+    return f"{dot}{name}{extra}{where}"
+
+
+def window_name(win, own_block):
+    """A tab's label: Rex's default "Window 1a2b3c4d" is noise, so show the
+    focused pane's process and title instead unless the tab was renamed."""
+    label = win.get("label") or ""
+    if label and not label.startswith("Window "):
+        return label
+    blocks = [b for b in win["blocks"] if b["id"] != own_block]
+    focused = next((b for b in blocks if b["id"] == win.get("focused")), None) or (
+        blocks[0] if blocks else None
+    )
+    if not focused:
+        return "(empty)"
+    return focused.get("title") or focused.get("proc") or focused.get("label") or "shell"
+
+
+def build_rows(sessions):
+    """Return (rows, index, summary). A row is (row_id, display); the index maps
+    a row id to the (session, window, block) it targets, for the jump; the
+    summary maps a tab or session row id to the pane lines shown as its preview."""
+    own_session = os.environ.get("REX_SESSION")
+    own_block = os.environ.get("REX_BLOCK")
+    rows, index, summary = [], {}, {}
+    for si, sess in enumerate(sessions):
+        wins = []
+        for w in sess["windows"]:
+            # The picker's own floating layer is a block too; leave it out.
+            visible = [b for b in w["blocks"] if b["id"] != own_block]
+            if visible:
+                wins.append((w, visible))
+        sid = f"s{si}"
+        current = f" {GREEN}(attached){RESET}" if sess["id"] == own_session else ""
+        rows.append((sid, f"{BOLD}{BLUE}{sess['label']}{RESET}{current}"))
+        focused_win = next(
+            (w for w, _ in wins if w["id"] == sess.get("active")),
+            wins[0][0] if wins else None,
+        )
+        index[sid] = (sess["id"], sess.get("active"), focused_win and focused_win.get("focused"))
+        summary[sid] = []
+        for wi, (w, visible) in enumerate(wins):
+            last_win = wi == len(wins) - 1
+            wid = f"s{si}w{wi}"
+            star = f" {YELLOW}*{RESET}" if w["id"] == sess.get("active") else ""
+            branch = "└─>" if last_win else "├─>"
+            rows.append((wid, f"{DIM}{branch}{RESET} {wi + 1}: {window_name(w, own_block)}{star}"))
+            index[wid] = (sess["id"], w["id"], w.get("focused"))
+            summary[wid] = [block_text(b) for b in visible]
+            summary[sid].append(f"{wi + 1}: {window_name(w, own_block)}")
+            for bi, b in enumerate(visible):
+                last_blk = bi == len(visible) - 1
+                trunk = "    " if last_win else "│   "
+                twig = "└─>" if last_blk else "├─>"
+                bid = f"{wid}b{bi}"
+                rows.append((bid, f"{DIM}{trunk}{twig}{RESET} {block_text(b)}"))
+                index[bid] = (sess["id"], w["id"], b["id"])
+    return rows, index, summary
+
+
+def rows_and_index():
+    return build_rows(gather())
+
+
+def cmd_list():
+    rows, _, _ = rows_and_index()
+    for row_id, text in rows:
+        print(f"{row_id}\t{text}")
+
+
+# What `rex capture --format=vt` emits that fzf's preview can't use: CSI
+# sequences, OSC strings, charset selects and stray escapes. Only SGR (colour)
+# sequences are kept; cursor-forward becomes spaces.
+VT_SEQ = re.compile(
+    r"\x1b\[([0-9;:?]*)([A-Za-z])"  # CSI params + final byte
+    r"|\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)"  # OSC ... BEL/ST
+    r"|\x1b[()][A-Z0-9]"  # charset select
+    r"|\x1b."  # any other two-byte escape
+)
+
+
+def vt_background(params, bg):
+    """Track the active background from one SGR sequence, returning the escape
+    that restores it (or "" for the default background)."""
+    parts = params.split(";")
+    i = 0
+    while i < len(parts):
+        p = parts[i]
+        if p in ("", "0", "49"):
+            bg = ""
+        elif p == "48" and parts[i + 1:i + 2] == ["2"] and len(parts) >= i + 5:
+            bg = f"\x1b[48;2;{parts[i + 2]};{parts[i + 3]};{parts[i + 4]}m"
+            i += 4
+        elif p == "48" and parts[i + 1:i + 2] == ["5"] and len(parts) >= i + 3:
+            bg = f"\x1b[48;5;{parts[i + 2]}m"
+            i += 2
+        elif p in ("38", "58") and parts[i + 1:i + 2] == ["2"]:
+            i += 4  # skip a truecolor foreground so its numbers aren't misread
+        elif p in ("38", "58") and parts[i + 1:i + 2] == ["5"]:
+            i += 2
+        elif p.isdigit() and (40 <= int(p) <= 47 or 100 <= int(p) <= 107):
+            bg = f"\x1b[{p}m"
+        i += 1
+    return bg
+
+
+def render_vt(text):
+    """Turn `rex capture --format=vt` output into text fzf can show in colour.
+
+    The capture draws blank cells with cursor-forward (ESC[nC) and ends lines
+    with CRLF. Gaps become spaces, painted with the default background so a
+    coloured region doesn't bleed across cells the pane left blank."""
+    out, bg, pos = [], "", 0
+    for m in VT_SEQ.finditer(text):
+        out.append(text[pos:m.start()].replace("\r", ""))
+        pos = m.end()
+        params, final = m.group(1), m.group(2)
+        if final == "m":
+            out.append(m.group(0))
+            bg = vt_background(params, bg)
+        elif final == "C":
+            gap = " " * int(params or 1)
+            out.append(f"\x1b[49m{gap}{bg}" if bg else gap)
+    out.append(text[pos:].replace("\r", ""))
+    return "".join(out)
+
+
+def cmd_preview(row_id):
+    _, index, summary = rows_and_index()
+    target = index.get(row_id)
+    if not target:
+        return
+    # Only panes get a screen. A tab or session has no single right pane to
+    # show: the picker's own floating layer holds focus, so "the focused pane"
+    # would be the picker itself. They list what is inside instead.
+    if row_id in summary:
+        noun = "tab" if row_id.count("w") == 0 else "pane"
+        count = len(summary[row_id])
+        print(f"{DIM}{count} {noun}{'' if count == 1 else 's'}{RESET}\n")
+        print("\n".join(summary[row_id]))
+        return
+    session_id, _, block_id = target
+    lines = int(os.environ.get("FZF_PREVIEW_LINES", "40"))
+    r = rex("capture", "-s", session_id, "-b", block_id, "--trim", "--format=vt", check=False)
+    if r.returncode != 0:
+        print((r.stderr or r.stdout).strip())
+        return
+    # `rex capture` includes scrollback; the visible screen is the tail.
+    rendered = render_vt(r.stdout).rstrip("\n").split("\n")
+    print("\n".join(line + RESET for line in rendered[-lines:]))
+
+
+def cmd_jump(row_id, client):
+    _, index, _ = rows_and_index()
+    target = index.get(row_id)
+    if not target:
+        return 1
+    session_id, window_id, block_id = target
+    # Pick the pane inside its window first (server side), then ask the client
+    # to show that session and tab. The second call is the one that needs
+    # Remote Control; the server-side focus alone leaves the old tab on screen.
+    if block_id:
+        rex("api", "call", "--session", session_id, "session.focus_block",
+            json.dumps({"block_id": block_id}), check=False)
+    args = ["do", "session.select", f"session_id={session_id}"]
+    if window_id:
+        args.append(f"window_id={window_id}")
+    prefix = ["-C", client] if client else []
+    r = rex(*prefix, *args, check=False)
+    if r.returncode != 0:
+        print((r.stderr or r.stdout).strip() or "rex could not switch")
+        input("\n(press enter to close)")
+        return 1
+    return 0
+
+
+def main():
+    argv = sys.argv[1:]
+    if argv[:1] == ["--list"]:
+        return cmd_list()
+    if argv[:1] == ["--preview"]:
+        return cmd_preview(argv[1])
+    if argv[:1] == ["--jump"]:
+        return cmd_jump(argv[1], argv[2] if len(argv) > 2 else "")
+
+    client = argv[0] if argv else ""
+    me = os.path.abspath(sys.argv[0])
+    rows, _, _ = rows_and_index()
+    if not rows:
+        print("no sessions")
+        return 1
+    data = "\n".join(f"{row_id}\t{text}" for row_id, text in rows)
+    fzf = subprocess.run(
+        [
+            "fzf", "--ansi", "--no-sort", "--layout=reverse", "--height=100%",
+            "--delimiter", "\t", "--with-nth", "2..", "--tiebreak=index",
+            "--prompt", "go to > ", "--pointer", "▶", "--marker", " ",
+            "--header", "enter: go   esc: close   type to filter",
+            "--preview", f"{me} --preview {{1}}",
+            "--preview-window", "right,55%,border-left",
+        ],
+        input=data, text=True, capture_output=False, stdout=subprocess.PIPE,
+    )
+    if fzf.returncode != 0 or not fzf.stdout.strip():
+        return 0
+    return cmd_jump(fzf.stdout.split("\t", 1)[0], client)
+
+
+if __name__ == "__main__":
+    sys.exit(main() or 0)
