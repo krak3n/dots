@@ -25,7 +25,21 @@ data["hooks"] = {
                     "timeout": 10,
                 }
             ],
-        }
+        },
+        # Rex's agent integration ("Install Rex for Agents" writes this same
+        # entry). It tells Claude Code it is running in a Rex terminal and how
+        # to address its session and pane. `|| true` and the stderr redirect keep
+        # it harmless on a Mac without Rex, and it is listed here so this
+        # script's wholesale `hooks` replacement doesn't delete it on apply.
+        {
+            "hooks": [
+                {
+                    "type": "command",
+                    "command": "/bin/sh -c 'rex __internal session-start --agent claude --feature-session-naming=false 2>/dev/null || true'",
+                    "timeout": 5,
+                }
+            ],
+        },
     ]
 }
 data["theme"] = "custom:onedark"
