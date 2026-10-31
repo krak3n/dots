@@ -6,7 +6,7 @@
   "Workspace.sidebarPosition": "left",
   "Workspace.tabIconTintMode": "off",
   "Workspace.inactivePaneFadeMode": "both",
-  "Workspace.animationStyle": "disabled",
+  "Workspace.animationStyle": "off",
   "Workspace.usesStandardInactiveWindowPaneStyles": true,
   "Workspace.terminalFontName": "Hack Nerd Font Mono JBM Ligatured",
   "Workspace.terminalFontSmoothing": true,
