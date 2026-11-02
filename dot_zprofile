@@ -9,6 +9,11 @@ export EDITOR="nvim"
 # ~/Library/Application Support, not ~/.local/share like on Linux.
 export PATH="$HOME/Library/Application Support/bob/nvim-bin:$PATH"
 
+# Rex only puts its `rex` CLI on PATH inside its own terminals. It lives in the
+# server bundle, under a Versions/Current dir that follows app updates, so add
+# it here for other terminals (Ghostty, ssh sessions).
+export PATH="$HOME/Library/Application Support/com.superlogical.rex/RexServer/Versions/Current/Rex Server.app/Contents/MacOS:$PATH"
+
 export GOROOT="$HOME/.go"
 export GOPATH="$HOME/go"
 export PATH="$GOPATH/bin:$PATH"
