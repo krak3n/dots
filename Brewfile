@@ -78,3 +78,5 @@ brew "glow"
 brew "poppler"
 # Firefox-based web browser with vertical tabs and workspaces
 cask "zen"
+# Static analyser that finds security issues in GitHub Actions workflows
+brew "zizmor"
