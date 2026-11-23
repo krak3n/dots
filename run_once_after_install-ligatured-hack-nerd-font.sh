@@ -14,7 +14,10 @@ set -euo pipefail
 # every subsequent `chezmoi apply`, so re-running `chezmoi apply` once
 # Kiri is up picks this back up.
 
+eval "$(/opt/homebrew/bin/brew shellenv)"
 export PATH="$HOME/.kiri/bin:$PATH"
+# docker-credential-osxkeychain (from brew) must be on PATH: docker's config
+# names it as the credsStore, and image pulls fail without it.
 # Kiri's docker context is current (set by configure-kiri), but a DOCKER_HOST
 # inherited from the environment would override it.
 unset DOCKER_HOST

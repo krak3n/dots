@@ -42,6 +42,8 @@ brew "kubernetes-cli"
 brew "kind"
 # Container runtime (Docker-compatible) needed for kind to run clusters (tap-qualified: not in homebrew/cask)
 cask "libracoder/kiri/kiri"
+# Docker credential helper for the macOS keychain (docker config sets credsStore: osxkeychain; Kiri, unlike Rancher, does not ship it)
+brew "docker-credential-helper"
 # Kubernetes package manager
 brew "helm"
 # Postgres client library (force-linked, it's keg-only by default)
