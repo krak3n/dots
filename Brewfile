@@ -82,3 +82,5 @@ brew "poppler"
 cask "zen"
 # Static analyser that finds security issues in GitHub Actions workflows
 brew "zizmor"
+# Atlassian CLI, for Jira and Confluence from the terminal (tap-qualified: not in homebrew/core)
+brew "atlassian/acli/acli"
