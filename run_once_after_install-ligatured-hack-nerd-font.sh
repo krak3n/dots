@@ -7,25 +7,25 @@ set -euo pipefail
 # release is current at build time, so running it here (once, on a fresh
 # machine) gets an up-to-date patched font rather than an old pinned one.
 #
-# Requires Docker (Rancher Desktop), which
-# run_once_after_configure-rancher-desktop.sh starts headlessly just before
+# Requires Docker (Kiri), which
+# run_once_after_configure-kiri.sh starts headlessly just before
 # this (chezmoi runs scripts in name order). If Docker still isn't ready,
 # this exits non-zero — chezmoi retries run_once_ scripts that failed on
 # every subsequent `chezmoi apply`, so re-running `chezmoi apply` once
-# Rancher is up picks this back up.
+# Kiri is up picks this back up.
 
-export PATH="$HOME/.rd/bin:$PATH"
-# Rancher runs with admin-access=false, so there's no /var/run/docker.sock;
-# point at its socket directly, as ~/.envrc does (not loaded under chezmoi).
-export DOCKER_HOST="unix://$HOME/.rd/docker.sock"
+export PATH="$HOME/.kiri/bin:$PATH"
+# Kiri's docker context is current (set by configure-kiri), but a DOCKER_HOST
+# inherited from the environment would override it.
+unset DOCKER_HOST
 
 if ! command -v docker >/dev/null 2>&1; then
-  echo "docker not found (Rancher Desktop not installed yet?) — skipping font build, will retry on next chezmoi apply" >&2
+  echo "docker not found (Kiri not installed yet?) — skipping font build, will retry on next chezmoi apply" >&2
   exit 1
 fi
 
 if ! docker info >/dev/null 2>&1; then
-  echo "docker daemon not reachable (Rancher Desktop not running yet?) — skipping font build, will retry on next chezmoi apply" >&2
+  echo "docker daemon not reachable (Kiri not running yet?) — skipping font build, will retry on next chezmoi apply" >&2
   exit 1
 fi
 

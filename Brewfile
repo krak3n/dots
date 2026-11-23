@@ -40,8 +40,8 @@ brew "direnv"
 brew "kubernetes-cli"
 # Run local Kubernetes clusters in Docker
 brew "kind"
-# Container runtime (Docker-compatible) needed for kind to run clusters
-cask "rancher"
+# Container runtime (Docker-compatible) needed for kind to run clusters (tap-qualified: not in homebrew/cask)
+cask "libracoder/kiri/kiri"
 # Kubernetes package manager
 brew "helm"
 # Postgres client library (force-linked, it's keg-only by default)
