@@ -84,3 +84,5 @@ cask "zen"
 brew "zizmor"
 # Atlassian CLI, for Jira and Confluence from the terminal (tap-qualified: not in homebrew/core)
 brew "atlassian/acli/acli"
+# Quick Look generator that renders Markdown files in Finder previews (open the app once to enable the extension)
+cask "qlmarkdown"
