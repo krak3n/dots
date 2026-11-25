@@ -86,3 +86,5 @@ brew "zizmor"
 brew "atlassian/acli/acli"
 # Quick Look generator that renders Markdown files in Finder previews (open the app once to enable the extension)
 cask "qlmarkdown"
+# Markdown editor with live preview, opens .md files from Finder (maintained fork of MacDown)
+cask "macdown-3000"
